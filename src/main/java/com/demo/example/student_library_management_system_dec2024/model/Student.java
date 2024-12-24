@@ -1,16 +1,16 @@
 package com.demo.example.student_library_management_system_dec2024.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "student")
+@Data // it generates getter and setter
 public class Student {
 
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -30,4 +30,7 @@ public class Student {
 
     @Column(nullable = false)
     private String dept;
+
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    private Card card;
 }
