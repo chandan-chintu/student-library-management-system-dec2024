@@ -1,5 +1,7 @@
 package com.demo.example.student_library_management_system_dec2024.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,14 +33,17 @@ public class Book {
     @Column
     private boolean available;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn
     private Author author;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn
     private Card card;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Transaction> transactions = new ArrayList<>();
 

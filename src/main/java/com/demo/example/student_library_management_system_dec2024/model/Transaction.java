@@ -1,5 +1,6 @@
 package com.demo.example.student_library_management_system_dec2024.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,10 +30,12 @@ public class Transaction {
     @Column(name = "issue_or_return")
     private String issueOrReturn;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn
     private Card card;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn
     private Book book;
