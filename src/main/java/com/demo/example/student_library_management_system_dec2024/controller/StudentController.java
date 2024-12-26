@@ -4,6 +4,7 @@ import com.demo.example.student_library_management_system_dec2024.model.Student;
 import com.demo.example.student_library_management_system_dec2024.requestdto.StudentRequestDto;
 import com.demo.example.student_library_management_system_dec2024.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,22 +16,40 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    // Responseentity - takes the response from APIs and binds it to responseentity and sends it
+    // HTTP codes
+    // 200 -ok success
+//    201-created
+//    404-not found
+//    400-bad request
+//    500-internal server error
+//    401-unauthorized
+
     @PostMapping("/save")
-    public String saveStudent(@RequestBody StudentRequestDto studentRequestDto) {
-        String response = studentService.addStudent(studentRequestDto);
-        return response;
+    public ResponseEntity<?> saveStudent(@RequestBody StudentRequestDto studentRequestDto) {
+        try {
+            String response = studentService.addStudent(studentRequestDto);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            //System.out.println("Exception occured : "+e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @GetMapping("/find/{id}")
-    public Student findStudentById(@PathVariable int id){
-        Student student = studentService.getStudentById(id);
-        return student;
+    public ResponseEntity<?> findStudentById(@PathVariable int id){
+        try {
+            Student student = studentService.getStudentById(id);
+            return ResponseEntity.ok(student);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/findAll")
-    public List<Student> findAllStudent(){
+    public ResponseEntity<?> findAllStudent(){
         List<Student> studentList = studentService.getAllStudents();
-        return studentList;
+        return ResponseEntity.ok(studentList);
     }
 
     @GetMapping("/count")
@@ -56,5 +75,29 @@ public class StudentController {
     public String updateStudentMobileByPatch(@PathVariable int id,@RequestParam String mobile){
         String response = studentService.updateStudentByPatch(id,mobile);
         return response;
+    }
+
+    @GetMapping("/findByPage")
+    public List<Student> findStudentsBasedOnPage(@RequestParam int pageNo, @RequestParam int pageSize){
+        List<Student> studentList = studentService.getStudentsBasedOnPage(pageNo,pageSize);
+        return studentList;
+    }
+
+    @GetMapping("/findByEmail")
+    public Student findStudentByEmail(@RequestParam String email){
+        Student student = studentService.getStudentByEmail(email);
+        return student;
+    }
+
+    @GetMapping("/findByEmailOrDept")
+    public List<Student> findStudentByEmailOrDept(@RequestParam String email,@RequestParam  String dept){
+        List<Student> studentList = studentService.getStudentByEmailOrDept(email,dept);
+        return studentList;
+    }
+
+    @GetMapping("/findByDept")
+    public List<Student> findStudentByDept(@RequestParam  String dept){
+        List<Student> studentList = studentService.getStudentByDept(dept);
+        return studentList;
     }
 }
